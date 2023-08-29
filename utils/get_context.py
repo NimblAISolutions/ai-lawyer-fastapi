@@ -41,6 +41,17 @@ database_milvus_small = Milvus(
     }
 )
 
+database_milvus_laws = Milvus(
+    embedding_function=embeddings,
+    collection_name="laws",
+    connection_args={
+        "uri": ZILLIZ_CLOUD_URI,
+        "user": ZILLIZ_CLOUD_USERNAME,
+        "password": ZILLIZ_CLOUD_PASSWORD,
+        "secure": True,
+    }
+)
+
 
 def get_database_pinecone(type: Sources):
     if type is Sources.pinecone_large:
@@ -82,6 +93,8 @@ async def get_context_from_db(message: str, source: Sources):
         database = database_milvus_small
     elif source is Sources.pinecone_small or source is Sources.pinecone_large:
         database = get_database_pinecone(source)
+    elif source is Sources.zilliz_laws:
+        database = database_milvus_laws
     else:
         raise ValueError("Incorrect type!")
     context = database.similarity_search(message, k=5)[:5]

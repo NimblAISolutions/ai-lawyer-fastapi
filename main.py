@@ -45,7 +45,7 @@ async def upload_zilliz(path: str, collection_name: str="unnamedcollection"):
 
 @app.get("/get_context")
 async def get_context(message: str, source: Sources):
-
+    print(message, source)
     result = await get_context_from_db(message, source)
 
     return result
